@@ -13,6 +13,11 @@ export const mockProfile = {
   resumeUrl: '/Ramya_Ramesh_Resume.pdf',
   linkedin: 'https://linkedin.com/in/ramya-ramesh-0933782b4',
   github: 'https://github.com/Selenophile6323',
+  stats: [
+    { label: 'Years Experience', value: 5, suffix: '+' },
+    { label: 'Projects', value: 20, suffix: '+' },
+    { label: 'Tools', value: 8, suffix: '+' },
+  ],
 };
 
 export const mockServices = [
@@ -61,31 +66,64 @@ export const mockProjects = [
   },
 ];
 
-export async function fetchProfile() {
+export interface ProfileStats {
+  label: string;
+  value: number;
+  suffix: string;
+}
+
+export interface ProfileData {
+  name: string;
+  headline: string;
+  manifesto: string;
+  resumeUrl: string;
+  linkedin: string;
+  github: string;
+  stats?: ProfileStats[];
+}
+
+export interface ProjectData {
+  id: string;
+  title: string;
+  category: string;
+  summary: string;
+  tools: string[];
+  github: string;
+  dashboard: string;
+}
+
+export interface ServiceData {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+}
+
+export async function fetchProfile(): Promise<ProfileData> {
   if (!process.env.CONTENTFUL_SPACE_ID) return mockProfile;
   try {
     const res = await contentfulClient.getEntries({ content_type: 'profile', limit: 1 });
-    return res.items[0]?.fields || mockProfile;
+    return (res.items[0]?.fields as unknown as ProfileData) || mockProfile;
   } catch (e) {
     return mockProfile;
   }
 }
 
-export async function fetchProjects() {
+export async function fetchProjects(): Promise<ProjectData[]> {
   if (!process.env.CONTENTFUL_SPACE_ID) return mockProjects;
   try {
     const res = await contentfulClient.getEntries({ content_type: 'project', order: ['fields.order'] });
-    return res.items.map(item => ({ id: item.sys.id, ...item.fields })) || mockProjects;
+    return (res.items.map(item => ({ id: item.sys.id, ...item.fields })) as ProjectData[]) || mockProjects;
   } catch (e) {
     return mockProjects;
   }
 }
 
-export async function fetchServices() {
+export async function fetchServices(): Promise<ServiceData[]> {
   if (!process.env.CONTENTFUL_SPACE_ID) return mockServices;
   try {
     const res = await contentfulClient.getEntries({ content_type: 'service' });
-    return res.items.map(item => ({ id: item.sys.id, ...item.fields })) || mockServices;
+    return (res.items.map(item => ({ id: item.sys.id, ...item.fields })) as ServiceData[]) || mockServices;
   } catch (e) {
     return mockServices;
   }
