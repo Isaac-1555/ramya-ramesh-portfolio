@@ -4,10 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 
 const SECTIONS = [
-  { id: 'hero', label: 'Home' },
   { id: 'about', label: 'About' },
-  { id: 'services', label: 'Capabilities' },
-  { id: 'work', label: 'Work' },
+  { id: 'services', label: 'Skills' },
+  { id: 'work', label: 'Works' },
   { id: 'contact', label: 'Connect' },
 ]
 
@@ -20,25 +19,29 @@ export default function SectionNav({ visible = false }: SectionNavProps) {
   const navRef: RefObject<HTMLElement | null> = useRef(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const best = entries.reduce(
-          (max, e) => (e.intersectionRatio > max.intersectionRatio ? e : max),
-          entries[0]
-        )
-        if (best?.isIntersecting) {
-          setActiveId(best.target.id)
+    const updateActive = () => {
+      const threshold = window.innerHeight * 0.5
+      let current = ''
+
+      for (const { id } of SECTIONS) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        if (el.getBoundingClientRect().top <= threshold) {
+          current = id
         }
-      },
-      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5], rootMargin: '-60px 0px 0px 0px' }
-    )
+      }
 
-    SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+        current = SECTIONS[SECTIONS.length - 1].id
+      }
 
-    return () => observer.disconnect()
+      if (current) setActiveId(current)
+    }
+
+    window.addEventListener('scroll', updateActive, { passive: true })
+    updateActive()
+
+    return () => window.removeEventListener('scroll', updateActive)
   }, [])
 
   const scrollTo = (id: string) => {

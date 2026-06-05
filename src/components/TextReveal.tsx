@@ -13,6 +13,7 @@ interface TextRevealProps {
   as?: ElementType
   animation?: AnimationType
   className?: string
+  onComplete?: () => void
 }
 
 export default function TextReveal({
@@ -20,9 +21,13 @@ export default function TextReveal({
   as: Tag = 'p',
   animation = 'clip-reveal',
   className = '',
+  onComplete,
 }: TextRevealProps) {
   const containerRef = useRef<HTMLElement>(null)
   const isSplit = animation === 'typewriter' || animation === 'stagger-wobble'
+  const onCompleteRef = useRef(onComplete)
+
+  useEffect(() => { onCompleteRef.current = onComplete })
 
   useEffect(() => {
     const el = containerRef.current
@@ -42,6 +47,7 @@ export default function TextReveal({
             duration: 0.4,
             ease: 'power2.out',
             scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
+            onComplete: () => onCompleteRef.current?.(),
           }
         )
       } else if (animation === 'stagger-wobble') {

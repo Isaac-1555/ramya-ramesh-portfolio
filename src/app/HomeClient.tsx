@@ -44,6 +44,7 @@ export interface HomeClientProps {
 
 export default function HomeClient({ profile, projects, services }: HomeClientProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [statsReady, setStatsReady] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 120);
@@ -133,6 +134,7 @@ export default function HomeClient({ profile, projects, services }: HomeClientPr
           as="h1"
           animation="typewriter"
           className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-3xl"
+          onComplete={() => setStatsReady(true)}
         >
           {profile.headline}
         </TextReveal>
@@ -155,7 +157,7 @@ export default function HomeClient({ profile, projects, services }: HomeClientPr
             Download Resume
           </a>
         </div>
-        {profile.stats && <StatsBar stats={profile.stats} />}
+        {profile.stats && statsReady && <StatsBar stats={profile.stats} />}
       </motion.section>
 
       {/* MANIFESTO */}

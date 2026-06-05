@@ -2,10 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Calendar, Chart, Star } from 'pixelarticons/react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface Stat {
   label: string
@@ -15,11 +12,12 @@ interface Stat {
 
 interface StatsBarProps {
   stats: Stat[]
+  delay?: number
 }
 
 const ICONS = [Calendar, Chart, Star]
 
-export default function StatsBar({ stats }: StatsBarProps) {
+export default function StatsBar({ stats, delay = 0 }: StatsBarProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -39,17 +37,14 @@ export default function StatsBar({ stats }: StatsBarProps) {
             duration: 2,
             ease: 'power2.out',
             snap: { textContent: 1 },
-            scrollTrigger: {
-              trigger: container,
-              start: 'top 85%',
-            },
+            delay,
           }
         )
       })
     }, container)
 
     return () => ctx.revert()
-  }, [stats])
+  }, [stats, delay])
 
   return (
     <div ref={containerRef} className="flex gap-8 md:gap-12 pt-12">
