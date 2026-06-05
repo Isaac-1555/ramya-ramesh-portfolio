@@ -47,7 +47,7 @@ export default function StatsBar({ stats, delay = 0 }: StatsBarProps) {
   }, [stats, delay])
 
   return (
-    <div ref={containerRef} className="flex gap-8 md:gap-12 pt-12">
+    <div ref={containerRef} className="flex flex-wrap gap-6 md:gap-12 pt-12 justify-center sm:justify-start">
       {stats.map((stat, i) => {
         const Icon = ICONS[i]
         return (

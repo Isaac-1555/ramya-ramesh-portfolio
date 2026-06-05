@@ -108,7 +108,7 @@ export default function HomeClient({ profile, projects, services }: HomeClientPr
           <div className="font-bold tracking-tighter text-xl uppercase">
             {profile.name}
           </div>
-          <div className="space-x-6 text-sm font-medium">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
             <a href="#work" className="hover:text-secondary transition-colors">
               Work
             </a>
@@ -125,39 +125,43 @@ export default function HomeClient({ profile, projects, services }: HomeClientPr
       {/* HERO */}
       <motion.section
         id="hero"
-        className="min-h-[70vh] flex flex-col justify-center gap-6 pb-24"
+        className="min-h-[calc(100dvh-6rem)] grid md:grid-cols-[minmax(550px,700px)_1fr] items-center gap-[clamp(3rem,6vw,8rem)]"
         initial="hidden"
         animate="visible"
         variants={fadeUp}
       >
-        <TextReveal
-          as="h1"
-          animation="typewriter"
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-3xl"
-          onComplete={() => setStatsReady(true)}
-        >
-          {profile.headline}
-        </TextReveal>
-        <p className="text-muted text-lg md:text-xl max-w-2xl">
-          Project Coordinator & Data Analyst - Vancouver, BC
-        </p>
-        <div className="flex gap-4 pt-2">
-          <a
-            href="#work"
-            className="bg-primary text-background px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors text-sm"
+        <div>
+          <TextReveal
+            as="h1"
+            animation="typewriter"
+            className="font-bold text-[clamp(2.5rem,11vw,4rem)] leading-[1] md:text-[clamp(3.5rem,6vw,5.5rem)] md:leading-[0.9] tracking-[-0.04em]"
+            style={{ textWrap: 'balance' } as React.CSSProperties}
+            onComplete={() => setStatsReady(true)}
           >
-            View Projects
-          </a>
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-background transition-colors text-sm"
-          >
-            Download Resume
-          </a>
+            {profile.headline}
+          </TextReveal>
+          <p className="text-muted text-lg md:text-xl max-w-2xl mt-6">
+            Project Coordinator & Data Analyst - Vancouver, BC
+          </p>
+          <div className="flex flex-wrap gap-4 pt-2">
+            <a
+              href="#work"
+              className="bg-primary text-background px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors text-sm"
+            >
+              View Projects
+            </a>
+            <a
+              href={profile.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-background transition-colors text-sm"
+            >
+              Download Resume
+            </a>
+          </div>
+          {profile.stats && statsReady && <StatsBar stats={profile.stats} />}
         </div>
-        {profile.stats && statsReady && <StatsBar stats={profile.stats} />}
+        <div className="hidden md:block w-full aspect-[4/5]" />
       </motion.section>
 
       {/* MANIFESTO */}
@@ -284,7 +288,7 @@ export default function HomeClient({ profile, projects, services }: HomeClientPr
         >
           <Mail width={24} height={24} /> Get in Touch
         </a>
-        <div className="mt-16 flex gap-8 text-muted font-medium">
+        <div className="mt-16 flex flex-wrap gap-8 text-muted font-medium justify-center">
           <a
             href={profile.linkedin}
             target="_blank"

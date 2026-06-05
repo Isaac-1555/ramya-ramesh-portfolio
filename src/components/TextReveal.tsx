@@ -13,6 +13,7 @@ interface TextRevealProps {
   as?: ElementType
   animation?: AnimationType
   className?: string
+  style?: React.CSSProperties
   onComplete?: () => void
 }
 
@@ -21,6 +22,7 @@ export default function TextReveal({
   as: Tag = 'p',
   animation = 'clip-reveal',
   className = '',
+  style,
   onComplete,
 }: TextRevealProps) {
   const containerRef = useRef<HTMLElement>(null)
@@ -96,11 +98,27 @@ export default function TextReveal({
 
   const splitContent = (): ReactNode[] | string => {
     if (animation === 'typewriter') {
-      return children.split('').map((char, i) => (
-        <span key={i} className="char inline-block">
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))
+      const words = children.split(' ')
+      const result: ReactNode[] = []
+      words.forEach((word, wi) => {
+        result.push(
+          <span
+            key={`w${wi}`}
+            className="word"
+            style={{ display: 'inline-block', whiteSpace: 'nowrap' as const }}
+          >
+            {word.split('').map((char, ci) => (
+              <span key={`w${wi}c${ci}`} className="char inline-block">
+                {char}
+              </span>
+            ))}
+          </span>
+        )
+        if (wi < words.length - 1) {
+          result.push(' ')
+        }
+      })
+      return result
     }
     if (animation === 'stagger-wobble') {
       return children.split(' ').map((word, i) => (
@@ -118,7 +136,7 @@ export default function TextReveal({
       : className
 
   return (
-    <Tag ref={containerRef as unknown as React.Ref<HTMLElement>} className={baseClasses}>
+    <Tag ref={containerRef as unknown as React.Ref<HTMLElement>} className={baseClasses} style={style}>
       {isSplit ? splitContent() : children}
     </Tag>
   )

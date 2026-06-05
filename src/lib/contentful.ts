@@ -8,7 +8,7 @@ export const contentfulClient = contentful.createClient({
 // Mock data fallback for development without API keys
 export const mockProfile = {
   name: 'Ramya Ramesh',
-  headline: 'Project Coordinator & Data Analyst - bridging operational execution with data-driven strategy.',
+  headline: 'Turning operational complexity into measurable business outcomes.',
   manifesto: 'With 5+ years coordinating cross-functional projects, I turn raw data into actionable insights. I believe operational clarity and analytical rigour drive real business impact.',
   resumeUrl: '/Ramya_Ramesh_Resume.pdf',
   linkedin: 'https://linkedin.com/in/ramya-ramesh-0933782b4',
